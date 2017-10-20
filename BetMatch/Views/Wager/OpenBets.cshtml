@@ -1,0 +1,29 @@
+﻿@using BetMatch.Models.Wager;
+@model BetMatch.Models.Wager.WagerModel
+@{
+    ViewBag.Title = "My Open Bets";
+    List<WagerModel> wagers = ViewBag.Wagers ?? new List<WagerModel>();
+}
+
+@Html.Partial("_AddWager", Model)
+<br /><br />
+<table id="tbl_BetFeed" border="1" width="100%">
+    <tr><th colspan="5" style="text-align:center">Open Bets</th></tr>
+    <tr>
+        <th>Proposed By</th>
+        <th>Matchup</th>
+        <th>Game Time</th>
+        <th>Spread, MoneyLine</th>
+        <th>Wager</th>
+    </tr>
+    @foreach (WagerModel wager in wagers)
+    {
+        <tr>
+            <td>@wager.CreateUser_FullName</td>
+            <td>@String.Format("{0} vs. {1}", wager.TeamName_For, wager.TeamName_Against)</td>
+            <td>@wager.GameTime</td>
+            <td>@wager.Spread</td>
+            <td>@wager.Wager</td>
+        </tr>
+    }
+</table>

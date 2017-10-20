@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNet.Identity
+@using BetMatch.Models.Wager;
+@model List<WagerModel>
+
+@{
+    ViewBag.Title = "Bet Feed";
+}
+<br /><br />
+<table id="tbl_BetFeed" border="1" width="100%">
+    <tr><th colspan="6" style="text-align:center">Bet Feed</th></tr>
+    <tr>
+        <th>Proposed By</th>
+        <th>Matchup</th>
+        <th>Game Time</th>
+        <th>Spread, MoneyLine</th>
+        <th>Wager</th>
+        <th></th>
+    </tr>
+    @foreach(WagerModel wager in Model)
+    {
+        <tr>
+            <td>@wager.CreateUser_FullName</td>
+            <td>@String.Format("{0} vs. {1}", wager.TeamName_For,wager.TeamName_Against)</td>
+            <td>@wager.GameTime</td>
+            <td>@wager.Spread</td>
+            <td>@wager.Wager</td>
+            <td>
+                @if(!String.Equals(wager.CreateUser,User.Identity.GetUserName()))
+                {
+                    <input type="button" id="btn_AcceptBet_@wager.Id" data-id="@wager.Id" value="Accept" />
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@using (Html.BeginForm("AcceptWager", "Wager", FormMethod.Post, new { id = "form_AcceptWager" }))
+{
+    @Html.AntiForgeryToken();
+    @Html.Hidden("WagerId", "");
+}
+
+<script>
+    $(document).ready(function () {
+        $('input[id^="btn_AcceptBet_"]').click(function () {
+            // Hide all buttons
+            $('input[id^="btn_AcceptBet_"]').hide();
+
+            // Get and Set the wager id selected
+            var wagerId = $(this).data('id');
+            $('#WagerId').val(wagerId);
+            $('#form_AcceptWager').submit();
+        });
+    });
+</script>

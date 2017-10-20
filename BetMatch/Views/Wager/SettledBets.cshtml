@@ -1,0 +1,29 @@
+﻿@using BetMatch.Models.Wager;
+@{
+    ViewBag.Title = "Settled Bets";
+}
+
+<br /><br />
+<table id="tbl_BetFeed" border="1" width="100%">
+    <tr><th colspan="6" style="text-align:center">Settled Bets</th></tr>
+    <tr>
+        <th>Proposed By</th>
+        <th>Accepted By</th>
+        <th>Matchup</th>
+        <th>Game Time</th>
+        <th>Spread, MoneyLine</th>
+        <th>Wager</th>
+    </tr>
+    @foreach (WagerModel wager in Model)
+    {
+        <tr>
+            <td>@wager.CreateUser_FullName</td>
+            <td>@wager.AcceptUser_FullName</td>
+            <td>@String.Format("{0} vs. {1}", wager.TeamName_For, wager.TeamName_Against)</td>
+            <td>@wager.GameTime</td>
+            <td>@wager.Spread</td>
+            <td>@wager.Wager</td>
+        </tr>
+    }
+</table>
+

@@ -1,0 +1,78 @@
+﻿@model BetMatch.Models.Wager.WagerModel
+<br /><br />
+@using (Html.BeginForm("AddWager","Wager",FormMethod.Post,new { id = "form_AddWager"}))
+{
+    @Html.AntiForgeryToken();
+    <input type="button" id="btn_AddBet" class="btn-primary" value="Propose" @(String.Format("{0}", (Model.Id == -1) ? "hidden" : "")) />
+    <br /><br />
+        <table id="tbl_NewWagerFields" @(String.Format("{0}", (Model.Id == -1) ? "" : "hidden"))>
+            <tr>
+                <td>
+                    @Html.TextBoxFor(model => model.TeamName_For, new { @class = "form-control" })
+                    <small style="color:red;">@Html.ValidationMessageFor(model => model.TeamName_For)</small>
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.TeamName_Against, new { @class="form-control", @style="padding-right:10px;" })
+                    <small style="color:red;">@Html.ValidationMessageFor(model => model.TeamName_Against)</small>
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.GameTime, new { @class = "form-control" })
+                    <small style="color:red;">@Html.ValidationMessageFor(model => model.GameTime)</small>
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.Spread, new { @class = "form-control" })
+                    <small style="color:red;">@Html.ValidationMessageFor(model => model.Spread)</small>
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.Wager, new { @class = "form-control" })
+                    <small style="color:red;">@Html.ValidationMessageFor(model => model.Wager)</small>
+                </td>
+                <td>
+                    <a href="#"><img src="~/Content/Images/CheckMark.png" id="icon_CheckMark" height="50" width="50" style="padding:5px;" /></a>
+                    <a href="#"><img src="~/Content/Images/X-Icon.png" id="icon_X" height="30" width="30" /></a>
+                </td>
+            </tr>
+            <tr>
+                <th>@Html.LabelFor(model => model.TeamName_For)</th>
+                <th>@Html.LabelFor(model => model.TeamName_Against)</th>
+                <th>@Html.LabelFor(model => model.GameTime)</th>
+                <th>@Html.LabelFor(model => model.Spread)</th>
+                <th>@Html.LabelFor(model => model.Wager)</th>
+                <th></th>
+            </tr>
+        </table>
+}
+
+
+<script>
+    $(document).ready(function () {
+        @if (Model.Id == 0)
+        {
+            @:$('#TeamName_For').val("");
+            @:$('#TeamName_Against').val("");
+            @:$('#Spread').val("");
+            @:$('#GameTime').val("");
+            @:$('#Wager').val("");
+        }
+        
+        $('#icon_X').click(function () {
+            $('#tbl_NewWagerFields').hide();
+            $('#btn_AddBet').show();
+            $('#TeamName_For').val("");
+            $('#TeamName_Against').val("");
+            $('#Spread').val("");
+            $('#GameTime').val("");
+            $('#Wager').val("");
+        });
+
+        $('#icon_CheckMark').click(function () {
+            $('input[id^="btn_AcceptBet_"]').hide();
+            $('#form_AddWager').submit();
+        });
+
+        $('#btn_AddBet').click(function () {
+            $('#btn_AddBet').hide();
+            $('#tbl_NewWagerFields').show();
+        });
+    });
+</script>

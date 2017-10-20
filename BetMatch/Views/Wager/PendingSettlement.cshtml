@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNet.Identity
+@using BetMatch.Models.Wager;
+@{
+    ViewBag.Title = "Pending Bets";
+    string userName = User.Identity.GetUserName();
+}
+
+<br /><br />
+<table id="tbl_BetFeed" border="1" width="100%">
+    <tr><th colspan="9" style="text-align:center">Pending Settlements</th></tr>
+    <tr>
+        <th>Proposed By</th>
+        <th>Has Settled?</th>
+        <th>Accepted By</th>
+        <th>Has Settled?</th>
+        <th>Matchup</th>
+        <th>Game Time</th>
+        <th>Spread, MoneyLine</th>
+        <th>Wager</th>
+        <th></th>
+    </tr>
+    @foreach (WagerModel wager in Model)
+    {
+        <tr>
+            <td>@wager.CreateUser_FullName</td>
+            <td>@String.Format("{0}", wager.HasCreatorSettled ? "Yes" : "No")</td>
+            <td>@wager.AcceptUser_FullName</td>
+            <td>@String.Format("{0}", wager.HasAcceptorSettled ? "Yes" : "No")</td>
+            <td>@String.Format("{0} vs. {1}", wager.TeamName_For, wager.TeamName_Against)</td>
+            <td>@wager.GameTime</td>
+            <td>@wager.Spread</td>
+            <td>@wager.Wager</td>
+            <td>
+                @if ((String.Equals(wager.CreateUser, userName) && !wager.HasCreatorSettled) || (String.Equals(wager.AcceptUser, userName) && !wager.HasAcceptorSettled))
+                {
+                    <input type="button" id="btn_SettleBet_@wager.Id" data-id="@wager.Id" value="Settle" />
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+@using (Html.BeginForm("SettleWager", "Wager", FormMethod.Post, new { id = "form_SettleWager" }))
+{
+    @Html.AntiForgeryToken();
+    @Html.Hidden("WagerId", "");
+}
+
+<script>
+    $(document).ready(function () {
+        $('input[id^="btn_SettleBet_"]').click(function () {
+            // Hide all buttons
+            $('input[id^="btn_SettleBet_"]').hide();
+
+            // Get and Set the wager id selected
+            var wagerId = $(this).data('id');
+            $('#WagerId').val(wagerId);
+            $('#form_SettleWager').submit();
+        });
+    });
+</script>
